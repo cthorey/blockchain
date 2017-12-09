@@ -240,7 +240,9 @@ def full_chain():
 
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
+
     values = request.get_json()
+
 
     nodes = values.get('nodes')
     if nodes is None:
@@ -252,7 +254,8 @@ def register_nodes():
     response = {
         'message': 'New nodes have been added',
         'total_nodes': list(blockchain.nodes),
-    }
+     }
+    
     return jsonify(response), 201
 
 
