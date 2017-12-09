@@ -1,17 +1,20 @@
 FROM python:3.6
 
-WORKDIR /app
+RUN pip3 install requests flask
 
-ENV BUILD_LIST git
+RUN pip3 --no-cache-dir install \
+        jupyter \
+        ipython \
+        pandas \
+        hashlib
 
-RUN apk add --update $BUILD_LIST \
-    && git clone https://github.com/dvf/blockchain.git /app \
-    && pip install pipenv \
-    && pipenv --python=python3.6 \
-    && pipenv install \
-    && apk del $BUILD_LIST \
-    && rm -rf /var/cache/apk/*
+COPY ./run_jupyter.sh /run_jupyter.sh
+COPY ./jupyter_notebook_config.py /root/.jupyter/
+
+WORKDIR /workdir
 
 EXPOSE 5000
+EXPOSE 8888
 
-ENTRYPOINT [ "pipenv", "run", "python", "/app/blockchain.py", "--port", "5000"  ]
+CMD ["/run_jupyter.sh", "--allow-root"]
+
